@@ -3,13 +3,13 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "sourceMap": true,
-    "outDir": "./dist",
+    "sourceMap": false,
+    "outDir": "./build",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../types/**/*"],
   "exclude": ["node_modules"]
 }

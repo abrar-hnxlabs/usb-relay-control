@@ -1,18 +1,25 @@
 import express from "express";
 import bodyParser from "body-parser";
+import serve from "express-static";
 import proxy from "express-http-proxy";
 import http, { IncomingMessage } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { Duplex } from "stream";
-
+import { logger } from "./common/logger";
 import { RelayHandler } from  "./handlers/ws/relay";
 
 const app = express();
 const port = 8080;
 
-app.use(bodyParser.json())
-app.use("/", proxy("localhost:3000"));
 
+
+app.use(bodyParser.json())
+if (process.env.PROD) {
+  logger.info("Serving static assets.");
+  app.use(serve(__dirname + '/public'));
+} else {
+ app.use("/", proxy("localhost:3000"));
+}
 const wss = new WebSocketServer({ noServer: true });
 
 wss.on("connection", (ws: WebSocket, req:IncomingMessage) => {
@@ -31,3 +38,4 @@ server.on("upgrade", (req: IncomingMessage, socket: Duplex, head: Buffer) => {
 });
 
 server.listen(port);
+logger.info("App listening at %d", port);
