@@ -27,7 +27,7 @@ export const RelayHandler = (ws: WebSocket, req: IncomingMessage) => {
         }
         break;
     }
-    logger.info("deviceId: %d ,changed to \"%s\", revertDelay: %d", packet.deviceId, packet.operation, packet.revertDelay);
+    logger.info("deviceId: %d ,changed to '%s', revertDelay: %d", packet.deviceId, packet.operation, packet.revertDelay);
     send(ws, res, 0);
   });
 }
