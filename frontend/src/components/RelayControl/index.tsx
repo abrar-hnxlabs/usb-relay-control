@@ -35,15 +35,17 @@ export const RelayControl = (props: RelayControlProps) => {
   },[checked]);
 
   return (
+    <>
       <Box>
         <Stack isInline align="center" direction="row" >
           <Text fontSize="xl" ml={5} width="40%" >{name}</Text>
           <Switch size="lg" onChange={switchOnClick} isChecked={checked} />
           <IconButton aria-label="momentary" icon={<RepeatClockIcon />} colorScheme="blue" variant="outline" onClick={momentaryBtnClick}/>
           <IconButton aria-label="momentary" icon={<TimeIcon />} colorScheme="red" variant="outline" onClick={delayBtnClick}/>
-          {saving && <CircularProgress isIndeterminate  thickness={0.3} color="orange" /> }
+          {saving && <CircularProgress isIndeterminate color="orange" size="35px" /> }
         </Stack>
-        <Divider />
       </Box>
+      <Divider />
+    </>
   );
 }
