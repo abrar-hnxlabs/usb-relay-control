@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
 
 import { SimpleGrid, Box, Heading } from "@chakra-ui/core";
 import { RelayControl } from "./components/RelayControl";
