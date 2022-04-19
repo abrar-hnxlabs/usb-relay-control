@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 
-import { SimpleGrid, Box, Heading } from "@chakra-ui/core";
+import { SimpleGrid, Box, Heading, Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
 import { RelayControl } from "./components/RelayControl";
 import { IListResponse, IRequest, IResponse } from "../../types/WebSocketTypes";
 
 function App() {
   const [deviceList, setDeviceList] = useState<IResponse[]>([]);
   const [ws, setWs] = useState<WebSocket>(new WebSocket("ws://192.168.1.65:8080/relay"));
-
+  
   useEffect(() => {
     ws.onopen = () => {
       ws.send(JSON.stringify({
@@ -46,8 +46,19 @@ function App() {
     ws.send(JSON.stringify(req));
   }
 
+  const renderAlert = () => {
+    return (
+      <Alert status="warning">
+        <AlertIcon />
+        <AlertTitle mr={2}>Connecting!</AlertTitle>
+        <AlertDescription>Backend service disconnected.</AlertDescription>
+      </Alert>
+    )
+  }
+
   return (
     <SimpleGrid columns={1} spacing={3} >
+      {(ws.readyState === ws.CONNECTING) && renderAlert()}
       <Box bg="tomato">
         <Heading ml={5} color="white" >Automation Relay State</Heading>
       </Box>

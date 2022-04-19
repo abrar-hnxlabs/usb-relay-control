@@ -1,7 +1,7 @@
-import React, { MouseEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Text, Box, Switch, Stack, CircularProgress, Divider, IconButton } from "@chakra-ui/core";
-import { RepeatClockIcon } from "@chakra-ui/icons";
+import { Text, Box, Switch, Stack, CircularProgress, Divider, IconButton } from "@chakra-ui/react";
+import { RepeatClockIcon, TimeIcon } from "@chakra-ui/icons";
 
 interface RelayControlProps {
     name: string;
@@ -39,8 +39,8 @@ export const RelayControl = (props: RelayControlProps) => {
         <Stack isInline align="center" direction="row" >
           <Text fontSize="xl" ml={5} width="40%" >{name}</Text>
           <Switch size="lg" onChange={switchOnClick} isChecked={checked} />
-          <IconButton aria-label="momentary" icon="repeat-clock" variantColor="blue" variant="outline" onClick={momentaryBtnClick}/>
-          <IconButton aria-label="momentary" icon="time" variantColor="red" variant="outline" onClick={delayBtnClick}/>
+          <IconButton aria-label="momentary" icon={<RepeatClockIcon />} colorScheme="blue" variant="outline" onClick={momentaryBtnClick}/>
+          <IconButton aria-label="momentary" icon={<TimeIcon />} colorScheme="red" variant="outline" onClick={delayBtnClick}/>
           {saving && <CircularProgress isIndeterminate  thickness={0.3} color="orange" /> }
         </Stack>
         <Divider />
