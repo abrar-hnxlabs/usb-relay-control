@@ -13,7 +13,7 @@ export function logger(): winston.Logger {
     ]
   });
 
-  if(process.env.PROD) {
+  if(process.env.NODE_ENV === "production") {
     log.add(new winston.transports.File({ filename: 'combined.log' }),)
   }
   return log;

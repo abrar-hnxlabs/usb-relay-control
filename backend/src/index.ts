@@ -12,7 +12,7 @@ const app = express();
 const port = 8080;
 const log = logger();
 app.use(bodyParser.json())
-if (process.env.PROD) {
+if (process.env.NODE_ENV === "production") {
   log.info("Serving static assets.");
   app.use(serve(__dirname + '/public'));
 } else {

@@ -1,3 +1,3 @@
 #! /bin/bash
 
-PROD=true pm2 start ./backend/build/index.js
+NODE_ENV=production pm2 start ./backend/build/index.js
