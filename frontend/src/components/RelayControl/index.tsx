@@ -52,10 +52,10 @@ export const RelayControl = (props: RelayControlProps) => {
 
   return (
     <Flex flexDirection="row" flexGrow={4} alignItems="baseline" justifyContent="space-around" borderBottom="1px" borderBottomColor="gray.400" borderStyle="solid">
-      <Box w="200px" h="50px">
+      <Box w="365px" h="50px">
         <Text fontSize="xl" ml={5} >{name}</Text>
       </Box>
-      <Box w="100px">
+      <Box w="120px">
         <Switch size="lg" onChange={switchOnClick} isChecked={checked} />
       </Box>
       <Box w="100px">
