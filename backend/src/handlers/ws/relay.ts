@@ -4,7 +4,7 @@ import { IRequest, IResponse, IListResponse } from "../../../../types/WebSocketT
 import { logger } from "../../common/logger";
 
 const MAX_ON_TIME = 60000;
-
+const log = logger();
 export const RelayHandler = (ws: WebSocket, req: IncomingMessage) => {
 
 
@@ -27,7 +27,7 @@ export const RelayHandler = (ws: WebSocket, req: IncomingMessage) => {
         }
         break;
     }
-    logger.info("deviceId: %d ,changed to '%s', revertDelay: %d", packet.deviceId, packet.operation, packet.revertDelay);
+    log.info("deviceId: %d ,changed to '%s', revertDelay: %d", packet.deviceId, packet.operation, packet.revertDelay);
     send(ws, res, 0);
   });
 }
@@ -86,7 +86,7 @@ function scheduleTurnOff(ws:WebSocket, deviceId: number, revertDelay: number) {
       operation: "change",
       data:[changeState(deviceId, "off")]
     }
-    logger.info("deviceId: %d, reverted.", deviceId);
+    log.info("deviceId: %d, reverted.", deviceId);
     send(ws, data, 0);
   }, delay);
 }

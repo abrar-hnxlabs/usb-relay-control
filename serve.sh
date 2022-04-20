@@ -1,3 +1,3 @@
 #! /bin/bash
 
-PROD=true node ./backend/build/index.js
+PROD=true pm2 start ./backend/build/index.js

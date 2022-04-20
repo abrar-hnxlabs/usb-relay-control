@@ -10,10 +10,10 @@ import { RelayHandler } from  "./handlers/ws/relay";
 
 const app = express();
 const port = 8080;
-
+const log = logger();
 app.use(bodyParser.json())
 if (process.env.PROD) {
-  logger.info("Serving static assets.");
+  log.info("Serving static assets.");
   app.use(serve(__dirname + '/public'));
 } else {
  app.use("/", proxy("localhost:3000"));
@@ -36,4 +36,4 @@ server.on("upgrade", (req: IncomingMessage, socket: Duplex, head: Buffer) => {
 });
 
 server.listen(port);
-logger.info("App listening at %d", port);
+log.info("App listening at %d", port);
