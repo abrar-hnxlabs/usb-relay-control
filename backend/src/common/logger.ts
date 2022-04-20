@@ -5,7 +5,7 @@ export const logger: winston.Logger = winston.createLogger({
   format: winston.format.combine (
     winston.format.splat(),
     winston.format.timestamp(),
-    winston.format.logstash()
+    winston.format.json()
   ),
   transports:[
     new winston.transports.Console()

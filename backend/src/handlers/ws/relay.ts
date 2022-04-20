@@ -3,7 +3,7 @@ import { WebSocket, RawData } from "ws";
 import { IRequest, IResponse, IListResponse } from "../../../../types/WebSocketTypes";
 import { logger } from "../../common/logger";
 
-const MAX_ON_TIME = 10000;
+const MAX_ON_TIME = 60000;
 
 export const RelayHandler = (ws: WebSocket, req: IncomingMessage) => {
 

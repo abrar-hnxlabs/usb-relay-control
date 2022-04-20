@@ -1,6 +1,7 @@
 #! /bin/bash
 
-npx concurrently "cd frontend && npm run clean && npm run build"\
-   "cd backend && npm run build"
- 
+cd frontend && npm run clean && npm run build
+cd ..
+cd backend && npm run build
+cd ..
 cp -r ./frontend/build ./backend/build/public

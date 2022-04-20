@@ -2,12 +2,14 @@ import React, {useEffect, useState} from 'react';
 
 import { SimpleGrid, Box, Heading, Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
 import { RelayControl } from "./components/RelayControl";
+import { DelaySlider } from './components/SliderControl';
 import { IListResponse, IRequest, IResponse } from "../../types/WebSocketTypes";
 
 function App() {
   const [deviceList, setDeviceList] = useState<IResponse[]>([]);
+  const [delay, setDelay] = useState(30);
   const [ws, setWs] = useState<WebSocket>(new WebSocket("ws://192.168.1.65:8080/relay"));
-  
+
   useEffect(() => {
     ws.onopen = () => {
       ws.send(JSON.stringify({
@@ -62,12 +64,16 @@ function App() {
       <Box bg="tomato">
         <Heading ml={5} color="white" >Automation Relay State</Heading>
       </Box>
+      <Box>
+        <DelaySlider min={10} max={60} onChange={setDelay} />
+      </Box>
       { deviceList.map( (d: any) => <RelayControl
         deviceId={d.deviceId}
         name={d.deviceName}
         key={d.deviceId}
         checked={(d.state === "on"? true: false )}
         onChange={relayOnChange}
+        delay={delay}
       />)}
     </SimpleGrid>
   );
