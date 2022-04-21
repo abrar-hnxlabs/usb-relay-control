@@ -5,9 +5,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  SliderMark,
   Text,
-  Stack,
   VStack,
 } from '@chakra-ui/react'
 
@@ -26,13 +24,12 @@ export const DelaySlider = (props: IDelaySliderProps) => {
     onChange(val);
   }
   return (
-    <VStack>
+    <VStack w ="100%">
       <Slider aria-label='slider-ex-1' defaultValue={30} min={min} max={max} step={10} onChangeEnd={selfOnChange}>
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
-        <SliderThumb boxSize="25px" />
-
+        <SliderThumb boxSize="20px" />
       </Slider>
       <Text>Auto Turn Off: {curVal} s</Text>
     </VStack>

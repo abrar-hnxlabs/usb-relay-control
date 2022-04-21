@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-import { SimpleGrid, Box, Heading, Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+import { Flex, Box, Heading, Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
 import { RelayControl } from "./components/RelayControl";
 import { DelaySlider } from './components/SliderControl';
-import { IListResponse, IRequest, IResponse } from "../../types/WebSocketTypes";
+import { IRequest, IDeviceState } from "../../types/WebSocketTypes";
 
 function App() {
-  const [deviceList, setDeviceList] = useState<IResponse[]>([]);
+  const [deviceList, setDeviceList] = useState<any>({});
   const [delay, setDelay] = useState(30);
+  const [nonce, setNonce] = useState<Boolean>(true);
   const [ws, setWs] = useState<WebSocket>(new WebSocket("ws://192.168.1.65:8080/relay"));
 
   useEffect(() => {
@@ -18,26 +19,24 @@ function App() {
     };
 
     ws.onmessage = (e) => {
-      const data: IListResponse = JSON.parse(e.data);
-      if (data.operation === "list" ){
-        const d = JSON.parse(e.data);
-        setDeviceList(d.data);
-      } else if (data.operation === "change"){
-        const d = JSON.parse(e.data);
-        const newDeviceList = deviceList.map(dev => {
-          if(dev.deviceId === d.data[0].deviceId){
-            return d.data[0];
-          }
-          return dev;
-        });
-        setDeviceList(newDeviceList);
+      const data: IDeviceState = JSON.parse(e.data);
+      if(data instanceof Array ) {
+        const temp: any = {};
+        data.forEach((e: IDeviceState) => {
+          temp[e.id] = e;
+        })
+        setDeviceList(temp);
+      } else {
+        deviceList[data.id] = data;
+        setDeviceList(deviceList);
       }
+      setNonce(!nonce);
     };
 
-    ws.onclose= () => {
+    ws.onclose = () => {
       setWs(new WebSocket("ws://192.168.1.65:8080/relay"));
     }
-  }, [ws, deviceList]);
+  }, [ws, deviceList, nonce]);
 
   const relayOnChange = (deviceId: number, value: string, revertDelay: number) => {
     const req: IRequest = {
@@ -58,24 +57,29 @@ function App() {
     )
   }
 
+  const devices: IDeviceState[] = [];
+  for (const dev in deviceList) {
+    devices.push(deviceList[dev]);
+  }
+
   return (
-    <SimpleGrid columns={1} spacing={3} >
+    <Flex direction="column" justifyContent="center">
       {(ws.readyState === ws.CONNECTING) && renderAlert()}
       <Box bg="tomato">
         <Heading ml={5} color="white" >Automation Relay State</Heading>
       </Box>
-      <Box>
+      <Box display="flex" alignSelf="center" w="90%">
         <DelaySlider min={10} max={60} onChange={setDelay} />
       </Box>
-      { deviceList.map( (d: any) => <RelayControl
-        deviceId={d.deviceId}
-        name={d.deviceName}
-        key={d.deviceId}
+      { devices.map( (d: IDeviceState) => <RelayControl
+        deviceId={d.id}
+        name={d.name}
+        key={d.id}
         checked={(d.state === "on"? true: false )}
         onChange={relayOnChange}
         delay={delay}
       />)}
-    </SimpleGrid>
+    </Flex>
   );
 }
 

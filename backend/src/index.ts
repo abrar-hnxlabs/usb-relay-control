@@ -3,28 +3,42 @@ import bodyParser from "body-parser";
 import serve from "express-static";
 import proxy from "express-http-proxy";
 import http, { IncomingMessage } from "http";
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocketServer, WebSocket, RawData } from "ws";
 import { Duplex } from "stream";
 import { logger } from "./common/logger";
-import { RelayHandler } from  "./handlers/ws/relay";
+import { RelayWSHandler } from  "./handlers/ws/relay";
+import { DeviceState } from "./common/device";
 
 const app = express();
 const port = 8080;
 const log = logger();
-app.use(bodyParser.json())
+const deviceStateModel = new DeviceState();
+const relayHandler = new RelayWSHandler(deviceStateModel);
+
+app.use(bodyParser.json());
+
 if (process.env.NODE_ENV === "production") {
   log.info("Serving static assets.");
   app.use(serve(__dirname + '/public'));
 } else {
  app.use("/", proxy("localhost:3000"));
 }
+
 const wss = new WebSocketServer({ noServer: true });
 
 wss.on("connection", (ws: WebSocket, req:IncomingMessage) => {
   switch(req.url){
     case "/relay":
-      RelayHandler(ws, req);
+      ws.on("message", (d) => { relayHandler.HandleMessage(ws, d)});
       break;
+  }
+});
+
+deviceStateModel.on("change", (device) => {
+  for (const ws of wss.clients.values()) {
+    if(ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(device));
+    }
   }
 });
 
