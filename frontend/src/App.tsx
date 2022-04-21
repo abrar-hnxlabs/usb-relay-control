@@ -63,7 +63,7 @@ function App() {
   }
 
   return (
-    <Flex direction="column" justifyContent="center">
+    <Flex direction="column" justifyContent="baseline" >
       {(ws.readyState === ws.CONNECTING) && renderAlert()}
       <Box bg="tomato">
         <Heading ml={5} color="white" >Automation Relay State</Heading>

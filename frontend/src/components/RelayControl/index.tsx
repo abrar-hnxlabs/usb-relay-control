@@ -7,7 +7,7 @@ import { Text,
   IconButton,
   Flex,
  } from "@chakra-ui/react";
-import { RepeatClockIcon, TimeIcon, MoonIcon } from "@chakra-ui/icons";
+import { RepeatClockIcon, UpDownIcon } from "@chakra-ui/icons";
 
 interface RelayControlProps {
     name: string;
@@ -43,7 +43,7 @@ export const RelayControl = (props: RelayControlProps) => {
       return () => clearTimeout(timer);
     }
 
-  }, [countDown]);
+  }, [countDown, decrementer]);
 
   const delayBtnClick = (e: any) => {
     onChange(deviceId, "on", delay * 1000);
@@ -51,7 +51,7 @@ export const RelayControl = (props: RelayControlProps) => {
   }
 
   return (
-    <Flex flexDirection="row" flexGrow={4} alignItems="baseline" justifyContent="space-around" borderBottom="1px" borderBottomColor="gray.400" borderStyle="solid">
+    <Flex flexDirection="row" flexGrow={4} alignItems="center" justifyContent="space-around" borderBottom="1px" borderBottomColor="gray.400" borderStyle="solid">
       <Box w="365px" h="50px">
         <Text fontSize="xl" ml={5} >{name}</Text>
       </Box>
@@ -59,10 +59,10 @@ export const RelayControl = (props: RelayControlProps) => {
         <Switch size="lg" onChange={switchOnClick} isChecked={checked} />
       </Box>
       <Box w="100px">
-        <IconButton aria-label="momentary" icon={<RepeatClockIcon />} colorScheme="blue" variant="outline" onClick={momentaryBtnClick}/>
+        <IconButton aria-label="momentary" icon={<UpDownIcon />} colorScheme="blue" variant="outline" onClick={momentaryBtnClick}/>
       </Box>
       <Box w="100px">
-        <IconButton aria-label="momentary" icon={<TimeIcon />} colorScheme="red" variant="outline" onClick={delayBtnClick}/>
+        <IconButton aria-label="momentary" icon={<RepeatClockIcon />} colorScheme="red" variant="outline" onClick={delayBtnClick}/>
       </Box>
       <Box w="100px">
         <CircularProgress color="orange" size="35px" value={countDown} />
