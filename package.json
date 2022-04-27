@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "ftdi-d2xx": "^1.1.2"
+  }
+}

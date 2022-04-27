@@ -13,12 +13,12 @@ export class RelayWSHandler {
     this.deviceState = deviceState;
   }
 
-  HandleMessage(ws:WebSocket, data: RawData) {
+  async HandleMessage(ws:WebSocket, data: RawData) {
     const packet: IRequest = JSON.parse(data.toString());
     if(packet.operation === "list") {
       ws.send(JSON.stringify(this.deviceState.toArray()));
     } else {
-      this.deviceState.ChangeState(packet.deviceId, packet.operation, packet.revertDelay);
+      await this.deviceState.ChangeState(packet.deviceId, packet.operation, packet.revertDelay);
     }
   }
 }

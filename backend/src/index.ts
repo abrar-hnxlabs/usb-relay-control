@@ -29,7 +29,7 @@ const wss = new WebSocketServer({ noServer: true });
 wss.on("connection", (ws: WebSocket, req:IncomingMessage) => {
   switch(req.url){
     case "/relay":
-      ws.on("message", (d) => { relayHandler.HandleMessage(ws, d)});
+      ws.on("message", async (d) => { await relayHandler.HandleMessage(ws, d)});
       break;
   }
 });

@@ -23,3 +23,7 @@ export interface IDeviceState {
   turnoffDelay: number;
   name: string;
 }
+
+export interface IStatus {
+  [key: number]: string
+}

@@ -1,7 +1,8 @@
-import { IDeviceState  } from "../../../types/WebSocketTypes";
+import { IDeviceState, IStatus  } from "../../../types/WebSocketTypes";
 import EventEmitter from "events";
 import { Logger } from "winston";
 import { logger } from "./logger";
+import { sendCommand } from "./relay_command";
 
 export class DeviceState extends EventEmitter {
   deviceStatesMap: Map<number, IDeviceState>;
@@ -11,8 +12,8 @@ export class DeviceState extends EventEmitter {
     super();
     this.log = logger();
     this.deviceStatesMap = new Map<number, IDeviceState>();
-    [1,2,3,4,5,6,7,8].forEach((e: number) => {
-      this.ChangeState(e, "off", -1);
+    [1,2,3,4,5,6,7,8].forEach(async (e: number) => {
+      await this.ChangeState(e, "off", -1);
     });
 
   }
@@ -25,17 +26,38 @@ export class DeviceState extends EventEmitter {
     return devArray;
   }
 
-  ChangeState(id: number, state: string, turnoffDelay: number): void {
+  updateState(statuses: IStatus) {
+    for(let idString in statuses) {
+      const id = parseInt(idString);
+      const v: IDeviceState = this.GetDeviceState(id);
+      v.state = statuses[idString];
+      this.deviceStatesMap.set(id, v);
+    }
+  }
+
+  GetDeviceState(id: number): IDeviceState {
     let v: IDeviceState | undefined = this.deviceStatesMap.get(id);
     if(!v) {
       v = {
         id,
-        state,
-        turnoffDelay,
+        state: "unknown",
+        turnoffDelay: -1,
         name: this.getName(id)
       }
     }
-    v.state = state;
+    return v;
+  }
+
+  async ChangeState(id: number, state: string, turnoffDelay: number): Promise<void> {
+    try {
+      const res = await sendCommand(state, id);
+      this.updateState(res);
+      this.log.info(res);
+    } catch (e) {
+      this.log.error(e);
+      return 
+    }
+    const v: IDeviceState = this.GetDeviceState(id);
     v.turnoffDelay = turnoffDelay;
     this.deviceStatesMap.set(id, v);
     if(turnoffDelay > 0 ){
